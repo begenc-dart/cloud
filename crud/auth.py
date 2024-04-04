@@ -5,8 +5,8 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from passlib.context import CryptContext
-from core.database import SessionLocal, get_db
-
+from core.database import  get_db
+from sqlalchemy.orm import Session
 from models.models import SignUp
 from models.schemas import Sign_Up_Model
 
@@ -54,7 +54,7 @@ async def get_current_user(header_params: Request):
     except JWTError:
         raise HTTPException(status_code=Stats.HTTP_401_UNAUTHORIZED,
                             detail='Could not validate user')
-def post_sign_up(req: Sign_Up_Model,db: SessionLocal = Depends(get_db)):
+def post_sign_up(req: Sign_Up_Model,db: Session = Depends(get_db)):
     create_user_model = SignUp(
         # student_id=req.student_id,
         name=req.name,

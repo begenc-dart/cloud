@@ -8,7 +8,7 @@ import crud
 from crud.auth import authenticate_admin, get_current_user
 from crud.shared_md import shared_get
 from models import Shared_Models
-from models.schemas import Show_Shared
+from models.schemas import Show_Shared, Show_folers
 
 shared_router = APIRouter(
     prefix='/shared',

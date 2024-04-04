@@ -11,6 +11,7 @@ class SignUp(Base):
     number=Column(Integer)
     token=Column(String)
     password=Column(String)
+    
     create_at = Column(DateTime, default=datetime.now)
     update_at = Column(DateTime, default=datetime.now)
 class Files(Base):
@@ -18,6 +19,7 @@ class Files(Base):
     id=Column(Integer,primary_key=True)
     image_url=Column(String)
     user_id=Column(Integer)
+    folder_id = Column(Integer, ForeignKey('folders.id'),default=0)
     size=Column(Integer)
     create_at = Column(DateTime, default=datetime.now)
     update_at = Column(DateTime, default=datetime.now)
@@ -25,14 +27,16 @@ class Files(Base):
     file_format=Column(String)
     is_liked=Column(Boolean,default=False)
     creator = relationship("Shared", back_populates="blogs")
+    folder = relationship("Folder", back_populates="files")
 class Folder(Base):
     __tablename__="folders"
     id=Column(Integer,primary_key=True,index=True, autoincrement=True)
     name=Column(String)
+    user_id=Column(Integer)
     url=Column(String)
     create_at = Column(DateTime, default=datetime.now)
     update_at = Column(DateTime, default=datetime.now)
-    
+    files = relationship("Files", back_populates="folder")
 class Shared(Base):
     __tablename__='shared'
     id=Column(Integer,primary_key=True,index=True, autoincrement=True)

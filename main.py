@@ -26,3 +26,4 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(routers.banner_router)
 app.include_router(routers.shared_router )
+app.include_router(routers.folder_api)

@@ -42,13 +42,16 @@ async def update_image(folders_id:int,header_param: Request,  files: UploadFile 
         return error
 
 #---------------------------------------------------------------------
-@banner_router.post("/update-file/", dependencies=[Depends(HTTPBearer())])
+@banner_router.post("/update-file", dependencies=[Depends(HTTPBearer())])
 async def update_image(header_param: Request,  files: UploadFile = File(...),db: Session = Depends(get_db)):
     print(id)
+    print(header_param)
     dec_token = await get_current_user(header_param)
     user = authenticate_admin(dec_token['username'], dec_token['password'], db)
     # result = await crud.update_post_image(db=db, id=id, file=files)
+    print(user.name)
     try:
+       
         # print(files.filename)
         result = await crud.create(user_name=user.name,folders_id=-1,userid=user.id,db=db,files=files)
         
@@ -59,7 +62,8 @@ async def update_image(header_param: Request,  files: UploadFile = File(...),db:
             return JSONResponse(content={"url":result}, status_code=status.HTTP_201_CREATED)
     except Exception as error:
         print(error)
-        return error
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=error)
 #---------------------------------------------------------------------
 @banner_router.get("/get-file/", dependencies=[Depends(HTTPBearer())], response_model=List[Show_File])
 async def get_file(header_param: Request, db: Session = Depends(get_db)):

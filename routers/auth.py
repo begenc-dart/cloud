@@ -17,10 +17,12 @@ auth_router = APIRouter(
     tags=['auth']
 )
 
-@auth_router.post('/sign_up/', status_code=status.HTTP_201_CREATED)
+@auth_router.post('/sign_up', status_code=status.HTTP_201_CREATED)
 async def create_user(req: Sign_Up_Model, db: Session = Depends(get_db),):
     data=post_sign_up(req=req,db=db)
-    
+    if not data:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail='This number is already in use')
     return JSONResponse(content={'token': data,}, 
                         status_code=status.HTTP_201_CREATED)
 

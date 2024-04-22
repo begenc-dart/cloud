@@ -78,6 +78,4 @@ def post_sign_up(req: Sign_Up_Model,db: Session = Depends(get_db)):
         db.commit()
         return access_token
     else:
-        return {
-            "data":"You have already Log In"
-        }
+        return False

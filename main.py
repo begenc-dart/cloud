@@ -7,7 +7,7 @@ import routers
 from routers.auth import auth_router
 
 app = FastAPI()
-Base.metadata.create_all(engine)
+
 
 origins = ["*"]
 methods = ["*"]
@@ -21,8 +21,8 @@ app.add_middleware(
     allow_methods=methods,
     allow_headers=headers,
 )
-# app.mount('/uploads', StaticFiles(directory="uploads"), name="uploads")
-
+app.mount('/uploads', StaticFiles(directory="uploads"), name="uploads")
+Base.metadata.create_all(engine)
 app.include_router(auth_router)
 app.include_router(routers.banner_router)
 app.include_router(routers.shared_router )

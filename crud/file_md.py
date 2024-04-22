@@ -46,19 +46,20 @@ def create_folder(directory,userid:int):
     path_const = f"/uploads/{userid}/{directory}/"
     path = sys.path[0] + path_const
     if not os.path.exists(path):
+        print("create folder")
         os.makedirs(path)
     return Create_folder(path=path, path_const=path_const)
 #---------------------------------------------------------------------------------
 def upload_image(directory:str, userid:int, file:UploadFile = File(...)):
-    print(directory)
     path=create_folder(directory=directory,userid= userid)
-    
+    print(path.path+"dicectory")
     extension = file.filename.split(".")[-1]
     unique_id = str(uuid.uuid4())
     new_name = unique_id + "." + extension
     upload_file_path_for_save_static = path.path + f"{new_name}"
     upload_file_path_for_db = path.path_const + f"{new_name}"
-        
+    print(upload_file_path_for_db)
+    print(upload_file_path_for_save_static)    
     with open(upload_file_path_for_save_static, "wb") as file_object:
         shutil.copyfileobj(file.file, file_object)
     if upload_file_path_for_db:
@@ -79,15 +80,17 @@ def delete_uploaded_image(image_name):
 async def create(user_name:str,folders_id:int,userid:int, files:UploadFile = File(...),db: Session = Depends(get_db)):
     # print(blog.id)
     if folders_id == -1:
-        print(blog,"Creating")
+        print("No folders")
         uploaded_image = upload_image(directory=user_name,userid=userid, file=files)
     else:
         blog = db.query(Folder).filter(folders_id==Folder.id).first()
+        
         if not blog:
             return False
         else:
             print(blog.name)
             uploaded_image = upload_image(directory=blog.name,userid=userid, file=files)
+    # print(blog.name,"Creating")
     format=files.filename.split(".")[-1]
     new_add = Files(
         image_url = uploaded_image,
